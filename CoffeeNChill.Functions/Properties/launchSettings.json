@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "CoffeeNChill_Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7203",
+      "launchBrowser": false
+    }
+  }
+}

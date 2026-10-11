@@ -4,3 +4,10 @@ obj/
 local.settings.json
 *.user
 *.suo
+
+# Local Azurite database files
+CoffeeNChill.Functions/__azurite_db_*.json
+CoffeeNChill.Functions/corehost-trace.txt
+
+# Local Azurite configuration
+CoffeeNChill.Functions/AzuriteConfig

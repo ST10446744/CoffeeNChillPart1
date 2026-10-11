@@ -1,25 +1,62 @@
-# CoffeeNChill Part 1 - Docker Deployment
+# CoffeeNChill Part 2 - Docker Deployment
 
-## Docker Hub Images
+## Docker Hub Image
 
-Functions:
-faizaan101/coffeenchill-functions:v1.0
+The CoffeeNChill Azure Functions application is published to Docker Hub as:
 
-Azurite:
-faizaan101/coffeenchill-azurite:v1.0
+`ghoste01/coffeenchill-functions:v2.0`
 
-## Run Azurite
+## Docker Compose
 
-docker run -d --name coffeenchill-azurite --network coffeenchill-network -p 10000:10000 -p 10001:10001 -p 10002:10002 mcr.microsoft.com/azure-storage/azurite
+Part 2 uses Docker Compose to run the CoffeeNChill Functions application together with Azurite.
 
-## Run Functions
+Azurite provides local emulation of Azure Blob Storage, Queue Storage and Table Storage.
 
-docker run -d --name coffeenchill-functions --network coffeenchill-network -p 7071:80 coffeenchill-functions:v1.0
+The Docker Compose setup includes:
 
-## API
+* CoffeeNChill Azure Functions
+* Azurite Blob Storage
+* Azurite Queue Storage
+* Azurite Table Storage
+* Azure Storage Queue for order processing
+* Azure Table Storage for storing orders
 
-The CoffeeNChill Functions expose menu management and staff document endpoints through HTTP.
+## Start the Application
+
+Open PowerShell in the CoffeeNChillPart1 project folder and run:
+
+`docker compose up`
+
+This starts both the Azurite storage services and the CoffeeNChill Functions application.
+
+## Stop the Application
+
+To stop the containers, run:
+
+`docker compose down`
+
+## Order Processing API
+
+The Part 2 order endpoint is:
+
+`POST http://localhost:7071/api/orders/queue`
+
+Orders are placed into the `order-processing-queue` without blocking the customer request.
+
+The queue-triggered `ProcessOrderQueue` function then processes the order and stores it in the `Orders` table.
+
+## Order Status Lifecycle
+
+Orders move through the following statuses:
+
+`Received → Preparing → Ready → Collected`
 
 ## Testing
 
-All eight required endpoints were tested successfully using Postman.
+The order queue endpoint was tested using Postman.
+
+A successful order submission returns HTTP status `202 Accepted`, confirming that the order has been accepted for asynchronous processing.
+
+The Postman collection is included with the project as:
+
+`CoffeeNChill_Part2_Postman_Collection.json`
